@@ -1,7 +1,8 @@
 package io.github.EnigmaticGames.NewFolder;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-
 import io.github.EnigmaticGames.NewFolder.*;
 
 public class Main {
@@ -14,13 +15,11 @@ public class Main {
 	
 	public static void main(String[] args) {
 		Window window = new Window(screenWidth, screenHeight); // Create game window
+		Player player = new Player(); // Create player
 		
-		// Render the static world objects once, into this image
+		// Render the static world objects once, into this image (this will change a bit when support for buildings and stuff is added)
 		BufferedImage staticWorldObjects = new BufferedImage(worldWidth, worldHeight, BufferedImage.TYPE_INT_RGB);
 		// TODO: Parse a tilemap and render to staticWorldObjects
-		
-		// Render all the dynamic world objects every frame, into this image
-		BufferedImage dynamicWorldObjects = new BufferedImage(worldWidth, worldHeight, BufferedImage.TYPE_INT_RGB);
 		
 		// Camera position
 		int cameraX = 0;
@@ -30,11 +29,8 @@ public class Main {
 		
 		while(running) {
 			try {
-				
-				// Draw things to screen
-				window.drawImage(staticWorldObjects, 0 - cameraX, 0 - cameraY);
-				window.drawImage(dynamicWorldObjects, 0 - cameraX, 0 - cameraY);
-				window.update();
+				window.drawImage(player.sprite, 392, 292);
+				window.repaint();
 				
 				Thread.sleep(1000/FPSCap);
 			} catch(Exception e) {

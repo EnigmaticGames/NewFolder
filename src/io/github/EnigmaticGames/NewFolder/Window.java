@@ -31,15 +31,11 @@ public class Window extends JFrame {
 		graphics.dispose();
 	}
 	
-	public void update() {
-		Graphics2D graphics = frameBuffer.createGraphics();
-		graphics.setColor(Color.WHITE);
-		graphics.fillRect(0, 0, getWidth(), getHeight());
-		graphics.dispose();
-		repaint();
-	}
-	
 	public void paint(Graphics g) {
 		g.drawImage(frameBuffer, 0, 0, this);
+		Graphics2D graphics = frameBuffer.createGraphics();
+		graphics.setColor(Color.WHITE);
+		graphics.fillRect(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight());
+		graphics.dispose();
 	}
 }
