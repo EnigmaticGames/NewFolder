@@ -19,7 +19,17 @@ public class Main {
 		window = new Window(windowWidth, windowHeight);
 		player = new Player();
 		
-		
+		boolean running = true;
+		while(running) {
+			try {
+				
+				window.repaint();
+				Thread.sleep(1000 / maxFPS);
+			} catch(Exception e) {
+				System.out.println("Game crashed!");
+				running = false;
+			}
+		}
 	}
 }
 
