@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 
 public class Player extends CollisionItem {
 	public Player() {
-		super(0, 0, 16, 16);
+		super(0, 0, 32, 64);
 		Graphics2D graphics = sprite.createGraphics();
 		graphics.setColor(Color.BLACK);
 		graphics.fillRect(0, 0, 16, 16);

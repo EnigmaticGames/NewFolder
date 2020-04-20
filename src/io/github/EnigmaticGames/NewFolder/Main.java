@@ -15,14 +15,39 @@ public class Main {
 	// Player settings
 	public static Player player;
 	
+	// World storage
+	public static Tile[][][] world;
+	
 	public static void main(String[] args) {
 		window = new Window(windowWidth, windowHeight);
 		player = new Player();
 		
+		// Worldgen
+		System.out.println("Generating world...");
+		world = new Tile[16][64][16];
+		// Populate world with chunks of air
+		for(int chunk = 0; chunk < 16; chunk++) {
+			for(int y = 0; y < 64; y++) {
+				for(int x = 0; x < 16; x++) {
+					world[chunk][y][x] = new Tile(0);
+				}
+			}
+		}
+		
+		// Generate world (flat line for now)
+		for(int chunk = 0; chunk < 16; chunk++) {
+			System.out.print("Generating chunk " + Integer.toString(chunk) + "...");
+			for(int x = 0; x < 16; x++) {
+				world[chunk][chunk][x] = new Tile(1);
+			}
+			System.out.println(" Done.");
+		}
+		
 		boolean running = true;
 		while(running) {
 			try {
-				
+				window.drawImageUI(WorldUtils.renderChunk(world[0]), 0, 100);
+				window.drawImageUI(WorldUtils.renderChunk(world[1]), 512, 100);
 				window.repaint();
 				Thread.sleep(1000 / maxFPS);
 			} catch(Exception e) {
