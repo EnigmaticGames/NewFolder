@@ -6,6 +6,25 @@ import java.awt.image.BufferedImage;
 import io.github.EnigmaticGames.NewFolder.*;
 
 public class Main {
+	// Window settings
+	private static final int windowWidth = 800;
+	private static final int windowHeight = 600;
+	private static final int maxFPS = 60;
+	public static Window window;
+	
+	// Player settings
+	public static Player player;
+	
+	public static void main(String[] args) {
+		window = new Window(windowWidth, windowHeight);
+		player = new Player();
+		
+		
+	}
+}
+
+/*
+public class Main {
 	static int worldWidth = 1600;
 	static int worldHeight = 1200;
 	static int screenWidth = 800;
@@ -64,4 +83,4 @@ public class Main {
 		
 		// Game crash
 	}
-}
+}*/

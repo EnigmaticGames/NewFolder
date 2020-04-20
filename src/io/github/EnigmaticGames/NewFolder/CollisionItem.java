@@ -20,5 +20,4 @@ public class CollisionItem extends WorldItem {
 			return true;
 		return false;
 	}
-
 }
