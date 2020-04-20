@@ -6,12 +6,12 @@ public class CollisionItem extends WorldItem {
 	public int width;
 	public int height;
 	
-	public CollisionItem(int setX, int setY, int width, int height) {
-		super(width, height);
+	public CollisionItem(int setX, int setY, int setWidth, int setHeight) {
+		super(setWidth, setHeight);
 		x = setX;
 		y = setY;
-		width = width;
-		height = height;
+		width = setWidth;
+		height = setHeight;
 	}
 	
 	public boolean collidingWith(CollisionItem item) {

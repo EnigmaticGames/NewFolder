@@ -13,9 +13,16 @@ public class Main {
 	
 	static int FPSCap = 60;
 	
+	public static Player player;
+	public static Window window;
+	
+	public static void drawRelative(CollisionItem item) {
+		window.drawImage(item.sprite, item.x - player.x + 392, item.y - player.y + 292);
+	}
+	
 	public static void main(String[] args) {
-		Window window = new Window(screenWidth, screenHeight); // Create game window
-		Player player = new Player(); // Create player
+		window = new Window(screenWidth, screenHeight); // Create game window
+		player = new Player(); // Create player
 		CollisionItem box = new CollisionItem(64, 64, 16, 16);
 		Graphics2D boxGraphics = box.sprite.createGraphics();
 		boxGraphics.setColor(Color.BLUE);
@@ -43,7 +50,10 @@ public class Main {
 					player.y += 5;
 				
 				window.drawImage(player.sprite, 392, 292); // Player should always be centered on screen.
-				window.drawImage(box.sprite, box.x - player.x, box.y - player.y);
+				drawRelative(box);
+				if(player.collidingWith(box)) {
+					System.out.println("Colliding!");
+				}
 				window.repaint();
 				
 				Thread.sleep(1000/FPSCap);
