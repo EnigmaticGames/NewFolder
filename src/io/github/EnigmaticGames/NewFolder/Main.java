@@ -29,7 +29,19 @@ public class Main {
 		
 		while(running) {
 			try {
-				window.drawImage(player.sprite, 392, 292);
+				if(window.keyManager.left)
+					cameraX -= 5;
+				
+				if(window.keyManager.right)
+					cameraX += 5;
+				
+				if(window.keyManager.up)
+					cameraY -= 5;
+				
+				if(window.keyManager.down)
+					cameraY += 5;
+				
+				window.drawImage(player.sprite, 392, 292); // Player should always be centered.
 				window.repaint();
 				
 				Thread.sleep(1000/FPSCap);
