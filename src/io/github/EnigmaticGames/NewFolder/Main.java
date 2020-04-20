@@ -16,32 +16,34 @@ public class Main {
 	public static void main(String[] args) {
 		Window window = new Window(screenWidth, screenHeight); // Create game window
 		Player player = new Player(); // Create player
+		CollisionItem box = new CollisionItem(64, 64, 16, 16);
+		Graphics2D boxGraphics = box.sprite.createGraphics();
+		boxGraphics.setColor(Color.BLUE);
+		boxGraphics.fillRect(0, 0, 16, 16);
+		boxGraphics.dispose();
 		
 		// Render the static world objects once, into this image (this will change a bit when support for buildings and stuff is added)
 		BufferedImage staticWorldObjects = new BufferedImage(worldWidth, worldHeight, BufferedImage.TYPE_INT_RGB);
 		// TODO: Parse a tilemap and render to staticWorldObjects
-		
-		// Camera position
-		int cameraX = 0;
-		int cameraY = 0;
 		
 		boolean running = true; // True unless game crashed
 		
 		while(running) {
 			try {
 				if(window.keyManager.left)
-					cameraX -= 5;
+					player.x -= 5;
 				
 				if(window.keyManager.right)
-					cameraX += 5;
+					player.x += 5;
 				
 				if(window.keyManager.up)
-					cameraY -= 5;
+					player.y -= 5;
 				
 				if(window.keyManager.down)
-					cameraY += 5;
+					player.y += 5;
 				
-				window.drawImage(player.sprite, 392, 292); // Player should always be centered.
+				window.drawImage(player.sprite, 392, 292); // Player should always be centered on screen.
+				window.drawImage(box.sprite, box.x - player.x, box.y - player.y);
 				window.repaint();
 				
 				Thread.sleep(1000/FPSCap);

@@ -6,10 +6,10 @@ public class CollisionItem extends WorldItem {
 	public int width;
 	public int height;
 	
-	public CollisionItem(int x, int y, int width, int height) {
+	public CollisionItem(int setX, int setY, int width, int height) {
 		super(width, height);
-		x = x;
-		y = y;
+		x = setX;
+		y = setY;
 		width = width;
 		height = height;
 	}
