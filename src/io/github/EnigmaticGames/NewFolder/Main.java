@@ -17,6 +17,7 @@ public class Main {
 	
 	// World storage
 	public static Tile[][][] world;
+	public static Tile[][] chunkCollision;
 	private static BufferedImage[] renderedChunks;
 	
 	public static void main(String[] args) {
@@ -27,6 +28,7 @@ public class Main {
 		System.out.println("Generating world...");
 		world = new Tile[16][64][16];
 		renderedChunks = new BufferedImage[16];
+		chunkCollision = new Tile[16][1024]; // 16 chunks, 1024 blocks per chunk
 		
 		// Populate world with chunks of air
 		for(int chunk = 0; chunk < 16; chunk++) {
@@ -51,6 +53,8 @@ public class Main {
 			// TODO: Decide what tiles to check when checking for collision (only check ones surrounded by air)
 			System.out.print(" Done. Rendering...");
 			renderedChunks[chunk] = WorldUtils.renderChunk(world[chunk]);
+			System.out.println("Done. Calculating collision...");
+			chunkCollision[chunk] = WorldUtils.calculateCollision(world[chunk]);
 			System.out.println("Done.");
 		}
 		
@@ -70,16 +74,22 @@ public class Main {
 				if(window.keyManager.down)
 					player.y += 7;
 				
-				window.drawImageCamera(player.sprite, player.x, player.y);
 				window.centerCameraOn(player);
+				window.drawImageCamera(player.sprite, player.x, player.y);
+				
 				
 				int currentChunk = WorldUtils.getChunkId(player);
 				if(currentChunk != 0) {
-					//window.drawImageCamera(renderedChunks[chunk], 512 * chunk, 100);
+					// We can draw all 3 chunks
 					window.drawImageCamera(renderedChunks[currentChunk - 1], 512 * (currentChunk - 1), 100);
 					window.drawImageCamera(renderedChunks[currentChunk], 512 * currentChunk, 100);
 					window.drawImageCamera(renderedChunks[currentChunk + 1], 512 * (currentChunk + 1), 100);
+				} else if(currentChunk == 15) {
+					// There are only 16 chunks in the world
+					window.drawImageCamera(renderedChunks[currentChunk - 1], 512 * (currentChunk - 1), 100);
+					window.drawImageCamera(renderedChunks[currentChunk], 512 * currentChunk, 100);
 				} else {
+					// There are no negative chunk IDs so we can only draw 0 and 1
 					window.drawImageCamera(renderedChunks[currentChunk], 512 * currentChunk, 100);
 					window.drawImageCamera(renderedChunks[currentChunk + 1], 512 * (currentChunk + 1), 100);
 				}
@@ -93,65 +103,3 @@ public class Main {
 		}
 	}
 }
-
-/*
-public class Main {
-	static int worldWidth = 1600;
-	static int worldHeight = 1200;
-	static int screenWidth = 800;
-	static int screenHeight = 600;
-	
-	static int FPSCap = 60;
-	
-	public static Player player;
-	public static Window window;
-	
-	public static void drawRelative(CollisionItem item) {
-		window.drawImage(item.sprite, item.x - player.x + 392, item.y - player.y + 292);
-	}
-	
-	public static void main(String[] args) {
-		window = new Window(screenWidth, screenHeight); // Create game window
-		player = new Player(); // Create player
-		CollisionItem box = new CollisionItem(64, 64, 16, 16);
-		Graphics2D boxGraphics = box.sprite.createGraphics();
-		boxGraphics.setColor(Color.BLUE);
-		boxGraphics.fillRect(0, 0, 16, 16);
-		boxGraphics.dispose();
-		
-		// Render the static world objects once, into this image (this will change a bit when support for buildings and stuff is added)
-		BufferedImage staticWorldObjects = new BufferedImage(worldWidth, worldHeight, BufferedImage.TYPE_INT_RGB);
-		// TODO: Parse a tilemap and render to staticWorldObjects
-		
-		boolean running = true; // True unless game crashed
-		
-		while(running) {
-			try {
-				if(window.keyManager.left)
-					player.x -= 5;
-				
-				if(window.keyManager.right)
-					player.x += 5;
-				
-				if(window.keyManager.up)
-					player.y -= 5;
-				
-				if(window.keyManager.down)
-					player.y += 5;
-				
-				window.drawImage(player.sprite, 392, 292); // Player should always be centered on screen.
-				drawRelative(box);
-				if(player.collidingWith(box)) {
-					System.out.println("Colliding!");
-				}
-				window.repaint();
-				
-				Thread.sleep(1000/FPSCap);
-			} catch(Exception e) {
-				running = false;
-			}
-		}
-		
-		// Game crash
-	}
-}*/
