@@ -17,6 +17,7 @@ public class Main {
 	
 	// World storage
 	public static Tile[][][] world;
+	private static BufferedImage[] renderedChunks;
 	
 	public static void main(String[] args) {
 		window = new Window(windowWidth, windowHeight);
@@ -25,6 +26,8 @@ public class Main {
 		// Worldgen
 		System.out.println("Generating world...");
 		world = new Tile[16][64][16];
+		renderedChunks = new BufferedImage[16];
+		
 		// Populate world with chunks of air
 		for(int chunk = 0; chunk < 16; chunk++) {
 			for(int y = 0; y < 64; y++) {
@@ -40,14 +43,32 @@ public class Main {
 			for(int x = 0; x < 16; x++) {
 				world[chunk][chunk][x] = new Tile(1);
 			}
-			System.out.println(" Done.");
+			// We pre-render all chunks; chunks will need to be re-rendered if they're modified.
+			// This provides a pretty good performance boost.
+			System.out.print(" Done. Rendering...");
+			renderedChunks[chunk] = WorldUtils.renderChunk(world[chunk]);
+			System.out.println("Done.");
 		}
+		
 		
 		boolean running = true;
 		while(running) {
 			try {
-				window.drawImageUI(WorldUtils.renderChunk(world[0]), 0, 100);
-				window.drawImageUI(WorldUtils.renderChunk(world[1]), 512, 100);
+				if(window.keyManager.left)
+					window.cameraX -= 7;
+				
+				if(window.keyManager.right)
+					window.cameraX += 7;
+				
+				if(window.keyManager.up)
+					window.cameraY -= 7;
+				
+				if(window.keyManager.down)
+					window.cameraY += 8;
+				
+				for(int chunk = 0; chunk < 16; chunk++) {
+					window.drawImageCamera(renderedChunks[chunk], 512 * chunk, 100);
+				}
 				window.repaint();
 				Thread.sleep(1000 / maxFPS);
 			} catch(Exception e) {
