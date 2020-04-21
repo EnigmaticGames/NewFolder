@@ -48,8 +48,8 @@ public class Window extends JFrame {
 	}
 	
 	public void centerCameraOn(CollisionItem item) {
-		cameraX = item.x - 400 - (item.width / 2);
-		cameraY = item.y - 300 - (item.height / 2);
+		cameraX = item.x - 400 + (item.width / 2);
+		cameraY = item.y - 300 + (item.height / 2);
 	}
 	
 	public void centerCameraOn(int x, int y) {

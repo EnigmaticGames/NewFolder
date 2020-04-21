@@ -40,11 +40,15 @@ public class Main {
 		// Generate world (flat line for now)
 		for(int chunk = 0; chunk < 16; chunk++) {
 			System.out.print("Generating chunk " + Integer.toString(chunk) + "...");
-			for(int x = 0; x < 16; x++) {
-				world[chunk][chunk][x] = new Tile(1);
+			for(int y = 0; y < 64; y++) {
+				for(int x = 0; x < 16; x++) {
+					world[chunk][y][x] = new Tile(1);
+				}
 			}
+			
 			// We pre-render all chunks; chunks will need to be re-rendered if they're modified.
 			// This provides a pretty good performance boost.
+			// TODO: Decide what tiles to check when checking for collision (only check ones surrounded by air)
 			System.out.print(" Done. Rendering...");
 			renderedChunks[chunk] = WorldUtils.renderChunk(world[chunk]);
 			System.out.println("Done.");
@@ -55,20 +59,31 @@ public class Main {
 		while(running) {
 			try {
 				if(window.keyManager.left)
-					window.cameraX -= 7;
+					player.x -= 7;
 				
 				if(window.keyManager.right)
-					window.cameraX += 7;
+					player.x += 7;
 				
 				if(window.keyManager.up)
-					window.cameraY -= 7;
+					player.y -= 7;
 				
 				if(window.keyManager.down)
-					window.cameraY += 8;
+					player.y += 7;
 				
-				for(int chunk = 0; chunk < 16; chunk++) {
-					window.drawImageCamera(renderedChunks[chunk], 512 * chunk, 100);
+				window.drawImageCamera(player.sprite, player.x, player.y);
+				window.centerCameraOn(player);
+				
+				int currentChunk = WorldUtils.getChunkId(player);
+				if(currentChunk != 0) {
+					//window.drawImageCamera(renderedChunks[chunk], 512 * chunk, 100);
+					window.drawImageCamera(renderedChunks[currentChunk - 1], 512 * (currentChunk - 1), 100);
+					window.drawImageCamera(renderedChunks[currentChunk], 512 * currentChunk, 100);
+					window.drawImageCamera(renderedChunks[currentChunk + 1], 512 * (currentChunk + 1), 100);
+				} else {
+					window.drawImageCamera(renderedChunks[currentChunk], 512 * currentChunk, 100);
+					window.drawImageCamera(renderedChunks[currentChunk + 1], 512 * (currentChunk + 1), 100);
 				}
+				
 				window.repaint();
 				Thread.sleep(1000 / maxFPS);
 			} catch(Exception e) {
