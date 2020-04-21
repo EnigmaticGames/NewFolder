@@ -3,6 +3,8 @@ package io.github.EnigmaticGames.NewFolder;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
 import io.github.EnigmaticGames.NewFolder.*;
 
 public class Main {
@@ -34,7 +36,7 @@ public class Main {
 		for(int chunk = 0; chunk < 16; chunk++) {
 			for(int y = 0; y < 64; y++) {
 				for(int x = 0; x < 16; x++) {
-					world[chunk][y][x] = new Tile(0);
+					world[chunk][y][x] = new Tile(0, (chunk * 512) + (x * 32), y * 32);
 				}
 			}
 		}
@@ -44,7 +46,7 @@ public class Main {
 			System.out.print("Generating chunk " + Integer.toString(chunk) + "...");
 			for(int y = 0; y < 64; y++) {
 				for(int x = 0; x < 16; x++) {
-					world[chunk][y][x] = new Tile(1);
+					world[chunk][y][x] = new Tile(1, (chunk * 512) + (x * 32), y * 32);
 				}
 			}
 			
@@ -74,30 +76,31 @@ public class Main {
 				if(window.keyManager.down)
 					player.y += 7;
 				
-				window.centerCameraOn(player);
-				window.drawImageCamera(player.sprite, player.x, player.y);
-				
-				
 				int currentChunk = WorldUtils.getChunkId(player);
+				player.collideWith(chunkCollision[currentChunk]);
 				if(currentChunk != 0) {
 					// We can draw all 3 chunks
-					window.drawImageCamera(renderedChunks[currentChunk - 1], 512 * (currentChunk - 1), 100);
-					window.drawImageCamera(renderedChunks[currentChunk], 512 * currentChunk, 100);
-					window.drawImageCamera(renderedChunks[currentChunk + 1], 512 * (currentChunk + 1), 100);
+					window.drawImageCamera(renderedChunks[currentChunk - 1], 512 * (currentChunk - 1), 0);
+					window.drawImageCamera(renderedChunks[currentChunk], 512 * currentChunk, 0);
+					window.drawImageCamera(renderedChunks[currentChunk + 1], 512 * (currentChunk + 1), 0);
 				} else if(currentChunk == 15) {
 					// There are only 16 chunks in the world
-					window.drawImageCamera(renderedChunks[currentChunk - 1], 512 * (currentChunk - 1), 100);
-					window.drawImageCamera(renderedChunks[currentChunk], 512 * currentChunk, 100);
+					window.drawImageCamera(renderedChunks[currentChunk - 1], 512 * (currentChunk - 1), 0);
+					window.drawImageCamera(renderedChunks[currentChunk], 512 * currentChunk, 0);
 				} else {
 					// There are no negative chunk IDs so we can only draw 0 and 1
-					window.drawImageCamera(renderedChunks[currentChunk], 512 * currentChunk, 100);
-					window.drawImageCamera(renderedChunks[currentChunk + 1], 512 * (currentChunk + 1), 100);
+					window.drawImageCamera(renderedChunks[currentChunk], 512 * currentChunk, 0);
+					window.drawImageCamera(renderedChunks[currentChunk + 1], 512 * (currentChunk + 1), 0);
 				}
+				
+				window.centerCameraOn(player);
+				window.drawImageCamera(player.sprite, player.x, player.y);
 				
 				window.repaint();
 				Thread.sleep(1000 / maxFPS);
 			} catch(Exception e) {
 				System.out.println("Game crashed!");
+				System.out.println(e);
 				running = false;
 			}
 		}

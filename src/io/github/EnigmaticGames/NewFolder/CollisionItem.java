@@ -15,6 +15,7 @@ public class CollisionItem extends WorldItem {
 	}
 	
 	public boolean collidingWith(CollisionItem item) {
+		if(item == null) return false;
 		// thank u mozilla
 		if(x < item.x + item.width && x + width > item.x && y < item.y + item.width && y + height > item.y)
 			return true;

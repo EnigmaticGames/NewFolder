@@ -12,4 +12,15 @@ public class Player extends CollisionItem {
 		graphics.fillRect(0, 0, 16, 16);
 		graphics.dispose();
 	}
+	
+	public void collideWith(Tile[] tiles) {
+		for(Tile tile : tiles) {
+			//System.out.println(tile.x);
+			if(collidingWith(tile)) {
+				while(y + height > tile.y) {
+					y -= 1;
+				}
+			}
+		}
+	}
 }
