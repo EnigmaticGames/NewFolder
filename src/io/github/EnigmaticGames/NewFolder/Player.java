@@ -6,6 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class Player extends CollisionItem {
 	public int yVelocity = 0;
+	public boolean isOnFloor = false;
+	
 	public Player() {
 		super(0, -300, 32, 64);
 		Graphics2D graphics = sprite.createGraphics();
@@ -14,26 +16,21 @@ public class Player extends CollisionItem {
 		graphics.dispose();
 	}
 	
-	public boolean isOnFloor(Tile[] tiles) {
-		boolean retCode = false;
-		for(Tile tile : tiles) {
-			if(tile != null) {
-				if(x < tile.x + tile.width && x + width > tile.x) {
-					if(tile.y - (y + height) <= 3 && tile.y - (y + height) >= -3)
-						retCode = true;
-				}
-			}
-		}
-		return retCode;
-	}
-	
 	public boolean collideWith(Tile[] tiles) {
 		boolean retCode = false;
+		isOnFloor = false;
+		
 		for(Tile tile : tiles) {
-			if(collidingWith(tile)) {
-				retCode = true;
-				while(y + height > tile.y) {
-					y -= 1;
+			if(tile != null) {
+				if(collidingWith(tile)) {
+					retCode = true;
+					if(tile.y < y + height) {
+						isOnFloor = true;
+						yVelocity = 0;
+						while(y + height > tile.y) {
+							y -= 1;
+						}
+					}
 				}
 			}
 		}
