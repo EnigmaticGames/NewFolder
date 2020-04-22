@@ -18,6 +18,7 @@ public class Main {
 	public static Player player; // The player object
 	private static int gravSpeed = 1;
 	private static int maxGravity = 10;
+	private static int jumpHeight = -12; // Still needs some tweaking to make it feel a-ok
 	
 	// World storage
 	public static Tile[][][] world; // This stores all of the tiles in the world
@@ -74,15 +75,16 @@ public class Main {
 				if(window.keyManager.right)
 					player.x += 7;
 				
-				if(window.keyManager.up) {} // Jump
-				
 				player.yVelocity += gravSpeed;
 				if(player.yVelocity > maxGravity)
 					player.yVelocity = maxGravity;
 				
 				player.y += player.yVelocity;
-				if(player.collideWith(chunkCollision[currentChunk]))
+				if(player.collideWith(chunkCollision[currentChunk])) {
 					player.yVelocity = 0;
+					if(window.keyManager.up) 
+						player.yVelocity += jumpHeight;
+				}
 				
 				if(currentChunk != 0) {
 					// We can draw all 3 chunks
