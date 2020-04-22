@@ -16,9 +16,10 @@ public class Main {
 	
 	// Player settings
 	public static Player player; // The player object
-	private static int gravSpeed = 1;
+	private static int gravSpeed = 2;
 	private static int maxGravity = 10;
-	private static int jumpHeight = -12; // Still needs some tweaking to make it feel a-ok
+	private static int jumpHeight = -20; // Still needs some tweaking to make it feel a-ok
+	private static int moveSpeed = 8;
 	
 	// World storage
 	public static Tile[][][] world; // This stores all of the tiles in the world
@@ -71,10 +72,10 @@ public class Main {
 				
 				// Move left and right
 				if(window.keyManager.left)
-					player.x -= 7;
+					player.x -= moveSpeed;
 				
 				if(window.keyManager.right)
-					player.x += 7;
+					player.x += moveSpeed;
 				
 				player.yVelocity += gravSpeed; // Do gravity
 				if(player.yVelocity > maxGravity) // Cap gravity
