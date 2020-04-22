@@ -47,7 +47,7 @@ public class Main {
 		// Generate world (flat line for now)
 		for(int chunk = 0; chunk < 16; chunk++) {
 			System.out.print("Generating chunk " + Integer.toString(chunk) + "...");
-			for(int y = 0; y < WorldUtils.chunkHeight; y++) {
+			for(int y = WorldUtils.chunkHeight / 2; y < WorldUtils.chunkHeight; y++) {
 				for(int x = 0; x < WorldUtils.chunkWidth; x++) {
 					world[chunk][y][x] = new Tile(1, (chunk * WorldUtils.chunkWidthPixels) + (x * 32), y * 32);
 				}
@@ -98,7 +98,11 @@ public class Main {
 					window.drawImageCamera(renderedChunks[currentChunk - 1], WorldUtils.chunkWidthPixels * (currentChunk - 1), 0);
 				
 				if(window.blockClicked) {
-					world[window.blockClickChunk][window.blockClickY][window.blockClickX].id = 0;
+					if(world[window.blockClickChunk][window.blockClickY][window.blockClickX].id == 1) 
+						world[window.blockClickChunk][window.blockClickY][window.blockClickX].id = 0;
+					else
+						world[window.blockClickChunk][window.blockClickY][window.blockClickX].id = 1;
+					
 					renderedChunks[window.blockClickChunk] = WorldUtils.renderChunk(world[window.blockClickChunk]);
 					chunkCollision[window.blockClickChunk] = WorldUtils.calculateCollision(world[window.blockClickChunk]);
 					window.blockClicked = false;

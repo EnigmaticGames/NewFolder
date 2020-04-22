@@ -9,7 +9,7 @@ public class Player extends CollisionItem {
 	public boolean isOnFloor = false;
 	
 	public Player() {
-		super(0, -300, 32, 64);
+		super(0, (WorldUtils.chunkHeightPixels / 2) - 200, 32, 64);
 		Graphics2D graphics = sprite.createGraphics();
 		graphics.setColor(Color.BLACK);
 		graphics.fillRect(0, 0, 16, 16);
