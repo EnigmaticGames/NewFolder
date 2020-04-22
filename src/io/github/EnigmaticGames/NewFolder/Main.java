@@ -97,6 +97,13 @@ public class Main {
 				if(currentChunk > 0)
 					window.drawImageCamera(renderedChunks[currentChunk - 1], WorldUtils.chunkWidthPixels * (currentChunk - 1), 0);
 				
+				if(window.blockClicked) {
+					world[window.blockClickChunk][window.blockClickY][window.blockClickX].id = 0;
+					renderedChunks[window.blockClickChunk] = WorldUtils.renderChunk(world[window.blockClickChunk]);
+					chunkCollision[window.blockClickChunk] = WorldUtils.calculateCollision(world[window.blockClickChunk]);
+					window.blockClicked = false;
+				}
+				
 				window.centerCameraOn(player);
 				window.drawImageCamera(player.sprite, player.x, player.y);
 				

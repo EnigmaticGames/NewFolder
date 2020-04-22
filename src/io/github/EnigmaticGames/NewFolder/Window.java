@@ -16,6 +16,11 @@ public class Window extends JFrame implements MouseListener {
 	public int cameraX;
 	public int cameraY;
 	
+	public int blockClickX = 0;
+	public int blockClickY = 0;
+	public int blockClickChunk = 0;
+	public boolean blockClicked;
+	
 	public Window(int width, int height) {
 		super(); // Create JFrame
 		setTitle("New Folder"); // Set window title
@@ -42,7 +47,21 @@ public class Window extends JFrame implements MouseListener {
 	}
 	
 	public void mousePressed(MouseEvent e) {
-		System.out.println("Mouse press!");
+		int x = e.getX();
+		int y = e.getY();
+		
+		int worldX = x + cameraX;
+		int worldY = y + cameraY;
+		if(worldY >= 0 && worldX > 0) {
+			int worldChunk = worldX / WorldUtils.chunkWidthPixels;
+			int blockX = (worldX - (worldChunk * WorldUtils.chunkWidthPixels)) / 32;
+			int blockY = worldY / 32;
+			System.out.println("Block X" + Integer.toString(blockX) + "Y" + Integer.toString(blockY) + " in chunk " + Integer.toString(worldChunk) + " clicked.");
+			blockClickX = blockX;
+			blockClickY = blockY;
+			blockClickChunk = worldChunk;
+			blockClicked = true;
+		}
 	}
 	
 	public void mouseReleased(MouseEvent e) {
