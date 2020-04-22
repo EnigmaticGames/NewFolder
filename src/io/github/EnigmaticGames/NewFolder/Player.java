@@ -25,10 +25,12 @@ public class Player extends CollisionItem {
 				if(collidingWith(tile)) {
 					retCode = true;
 					if(tile.y < y + height) {
-						isOnFloor = true;
-						yVelocity = 0;
-						while(y + height > tile.y) {
-							y -= 1;
+						if(y + height - tile.y <= yVelocity) {
+							isOnFloor = true;
+							yVelocity = 0;
+							while(y + height > tile.y) {
+								y -= 1;
+							}
 						}
 					}
 				}
