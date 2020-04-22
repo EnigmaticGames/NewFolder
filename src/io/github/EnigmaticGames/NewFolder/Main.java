@@ -9,33 +9,35 @@ import io.github.EnigmaticGames.NewFolder.*;
 
 public class Main {
 	// Window settings
-	private static final int windowWidth = 800;
-	private static final int windowHeight = 600;
-	private static final int maxFPS = 60;
-	public static Window window;
+	private static final int windowWidth = 800; // Game window width
+	private static final int windowHeight = 600; // Game window height
+	private static final int maxFPS = 60; // Game is locked to this FPS
+	public static Window window; // The actual window
 	
 	// Player settings
-	public static Player player;
+	public static Player player; // The player object
+	private static int gravSpeed = 1;
+	private static int maxGravity = 10;
 	
 	// World storage
-	public static Tile[][][] world;
-	public static Tile[][] chunkCollision;
-	private static BufferedImage[] renderedChunks;
+	public static Tile[][][] world; // This stores all of the tiles in the world
+	public static Tile[][] chunkCollision; /// This stores all of the tiles that are touching air
+	private static BufferedImage[] renderedChunks; // This stores images of each chunk so we have to render at most 1 per frame
 	
 	public static void main(String[] args) {
-		window = new Window(windowWidth, windowHeight);
-		player = new Player();
+		window = new Window(windowWidth, windowHeight); // Setup the window
+		player = new Player(); // Initialize the player
 		
-		// Worldgen
+		// Worldgen, just a straight line for now
 		System.out.println("Generating world...");
-		world = new Tile[16][64][16];
-		renderedChunks = new BufferedImage[16];
-		chunkCollision = new Tile[16][1024]; // 16 chunks, 1024 blocks per chunk
+		world = new Tile[WorldUtils.chunkCount][WorldUtils.chunkHeight][WorldUtils.chunkWidth]; // 16 chunks that are 16 wide and 64 tall
+		renderedChunks = new BufferedImage[WorldUtils.chunkCount]; // 16 chunks
+		chunkCollision = new Tile[WorldUtils.chunkCount][WorldUtils.chunkWidth * WorldUtils.chunkHeight]; // 16 chunks, 1024 blocks per chunk
 		
 		// Populate world with chunks of air
-		for(int chunk = 0; chunk < 16; chunk++) {
-			for(int y = 0; y < 64; y++) {
-				for(int x = 0; x < 16; x++) {
+		for(int chunk = 0; chunk < WorldUtils.chunkCount; chunk++) {
+			for(int y = 0; y < WorldUtils.chunkHeight; y++) {
+				for(int x = 0; x < WorldUtils.chunkWidth; x++) {
 					world[chunk][y][x] = new Tile(0, (chunk * 512) + (x * 32), y * 32);
 				}
 			}
@@ -64,20 +66,24 @@ public class Main {
 		boolean running = true;
 		while(running) {
 			try {
+				int currentChunk = WorldUtils.getChunkId(player);
+				
 				if(window.keyManager.left)
 					player.x -= 7;
 				
 				if(window.keyManager.right)
 					player.x += 7;
 				
-				if(window.keyManager.up)
-					player.y -= 7;
+				if(window.keyManager.up) {} // Jump
 				
-				if(window.keyManager.down)
-					player.y += 7;
+				player.yVelocity += gravSpeed;
+				if(player.yVelocity > maxGravity)
+					player.yVelocity = maxGravity;
 				
-				int currentChunk = WorldUtils.getChunkId(player);
-				player.collideWith(chunkCollision[currentChunk]);
+				player.y += player.yVelocity;
+				if(player.collideWith(chunkCollision[currentChunk]))
+					player.yVelocity = 0;
+				
 				if(currentChunk != 0) {
 					// We can draw all 3 chunks
 					window.drawImageCamera(renderedChunks[currentChunk - 1], 512 * (currentChunk - 1), 0);
