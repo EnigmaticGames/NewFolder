@@ -39,7 +39,7 @@ public class Main {
 		for(int chunk = 0; chunk < WorldUtils.chunkCount; chunk++) {
 			for(int y = 0; y < WorldUtils.chunkHeight; y++) {
 				for(int x = 0; x < WorldUtils.chunkWidth; x++) {
-					world[chunk][y][x] = new Tile(0, (chunk * 512) + (x * 32), y * 32);
+					world[chunk][y][x] = new Tile(0, (chunk * WorldUtils.chunkWidthPixels) + (x * 32), y * 32);
 				}
 			}
 		}
@@ -47,9 +47,9 @@ public class Main {
 		// Generate world (flat line for now)
 		for(int chunk = 0; chunk < 16; chunk++) {
 			System.out.print("Generating chunk " + Integer.toString(chunk) + "...");
-			for(int y = 0; y < 64; y++) {
-				for(int x = 0; x < 16; x++) {
-					world[chunk][y][x] = new Tile(1, (chunk * 512) + (x * 32), y * 32);
+			for(int y = 0; y < WorldUtils.chunkHeight; y++) {
+				for(int x = 0; x < WorldUtils.chunkWidth; x++) {
+					world[chunk][y][x] = new Tile(1, (chunk * WorldUtils.chunkWidthPixels) + (x * 32), y * 32);
 				}
 			}
 			
@@ -67,39 +67,35 @@ public class Main {
 		boolean running = true;
 		while(running) {
 			try {
-				int currentChunk = WorldUtils.getChunkId(player);
+				int currentChunk = WorldUtils.getChunkId(player); // Get player's current chunk
 				
+				// Move left and right
 				if(window.keyManager.left)
 					player.x -= 7;
 				
 				if(window.keyManager.right)
 					player.x += 7;
 				
-				player.yVelocity += gravSpeed;
-				if(player.yVelocity > maxGravity)
+				player.yVelocity += gravSpeed; // Do gravity
+				if(player.yVelocity > maxGravity) // Cap gravity
 					player.yVelocity = maxGravity;
 				
-				player.y += player.yVelocity;
-				player.collideWith(chunkCollision[currentChunk]);
+				player.y += player.yVelocity; // Do vertical movement
+				player.collideWith(chunkCollision[currentChunk]); // Do collision
 				if(player.isOnFloor) {
-					if(window.keyManager.up) 
+					// Do jumping
+					if(window.keyManager.up)
 						player.yVelocity += jumpHeight;
 				}
 				
-				if(currentChunk != 0) {
-					// We can draw all 3 chunks
-					window.drawImageCamera(renderedChunks[currentChunk - 1], 512 * (currentChunk - 1), 0);
-					window.drawImageCamera(renderedChunks[currentChunk], 512 * currentChunk, 0);
-					window.drawImageCamera(renderedChunks[currentChunk + 1], 512 * (currentChunk + 1), 0);
-				} else if(currentChunk == 15) {
-					// There are only 16 chunks in the world
-					window.drawImageCamera(renderedChunks[currentChunk - 1], 512 * (currentChunk - 1), 0);
-					window.drawImageCamera(renderedChunks[currentChunk], 512 * currentChunk, 0);
-				} else {
-					// There are no negative chunk IDs so we can only draw 0 and 1
-					window.drawImageCamera(renderedChunks[currentChunk], 512 * currentChunk, 0);
-					window.drawImageCamera(renderedChunks[currentChunk + 1], 512 * (currentChunk + 1), 0);
-				}
+				// Draw chunks
+				window.drawImageCamera(renderedChunks[currentChunk], WorldUtils.chunkWidthPixels * currentChunk, 0);
+				
+				if(currentChunk != WorldUtils.chunkCount - 1)
+					window.drawImageCamera(renderedChunks[currentChunk + 1], WorldUtils.chunkWidthPixels * (currentChunk + 1), 0);
+				
+				if(currentChunk > 0)
+					window.drawImageCamera(renderedChunks[currentChunk - 1], WorldUtils.chunkWidthPixels * (currentChunk - 1), 0);
 				
 				window.centerCameraOn(player);
 				window.drawImageCamera(player.sprite, player.x, player.y);
