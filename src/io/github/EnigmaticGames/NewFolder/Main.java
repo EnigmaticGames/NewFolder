@@ -80,7 +80,8 @@ public class Main {
 					player.yVelocity = maxGravity;
 				
 				player.y += player.yVelocity;
-				if(player.collideWith(chunkCollision[currentChunk])) {
+				player.collideWith(chunkCollision[currentChunk]);
+				if(player.isOnFloor(chunkCollision[currentChunk])) {
 					player.yVelocity = 0;
 					if(window.keyManager.up) 
 						player.yVelocity += jumpHeight;

@@ -14,10 +14,22 @@ public class Player extends CollisionItem {
 		graphics.dispose();
 	}
 	
+	public boolean isOnFloor(Tile[] tiles) {
+		boolean retCode = false;
+		for(Tile tile : tiles) {
+			if(tile != null) {
+				if(x < tile.x + tile.width && x + width > tile.x) {
+					if(tile.y - (y + height) <= 3 && tile.y - (y + height) >= -3)
+						retCode = true;
+				}
+			}
+		}
+		return retCode;
+	}
+	
 	public boolean collideWith(Tile[] tiles) {
 		boolean retCode = false;
 		for(Tile tile : tiles) {
-			//System.out.println(tile.x);
 			if(collidingWith(tile)) {
 				retCode = true;
 				while(y + height > tile.y) {
