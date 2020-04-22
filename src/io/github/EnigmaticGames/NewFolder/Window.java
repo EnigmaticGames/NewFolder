@@ -1,30 +1,52 @@
 package io.github.EnigmaticGames.NewFolder;
 
 import javax.swing.JFrame;
-
 import io.github.EnigmaticGames.NewFolder.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-public class Window extends JFrame {
+public class Window extends JFrame implements MouseListener {
 	public BufferedImage frameBuffer;
 	public Keyboard keyManager;
 	public int cameraX;
 	public int cameraY;
 	
 	public Window(int width, int height) {
-		super();
-		setTitle("New Folder");
-		keyManager = new Keyboard();
-		addKeyListener(keyManager);
-		setSize(width, height);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
-		setVisible(true);
-		frameBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		super(); // Create JFrame
+		setTitle("New Folder"); // Set window title
+		keyManager = new Keyboard(); // Setup keyboard listener
+		addKeyListener(keyManager); // Make JFrame use keyboard listener
+		addMouseListener(this); // Setup mouse listening
+		setSize(width, height); // Set window size
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Terminate the game on window close
+		setLocationRelativeTo(null); // Center window
+		setVisible(true); // Make window visible
+		frameBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB); // Create image for framebuffer
+	}
+	
+	public void mouseClicked(MouseEvent e) {
+		System.out.println("Mouse click!");
+	}
+	
+	public void mouseEntered(MouseEvent e) {
+		System.out.println("Mouse enter!");
+	}
+	
+	public void mouseExited(MouseEvent e) {
+		System.out.println("Mouse exit!");
+	}
+	
+	public void mousePressed(MouseEvent e) {
+		System.out.println("Mouse press!");
+	}
+	
+	public void mouseReleased(MouseEvent e) {
+		System.out.println("Mouse release!");
 	}
 	
 	public void drawImageUI(BufferedImage image, int x, int y) {
